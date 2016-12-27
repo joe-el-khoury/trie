@@ -42,6 +42,15 @@ public:
     }
 };
 
+namespace std {
+template<>
+struct hash<TrieNode> {
+    std::size_t operator() (const TrieNode& _to_hash) const {
+        return std::hash<char>()(_to_hash.get_char());
+    }
+};
+}
+
 class Trie {
 private:
     // A trie is a vector of unordered_sets of trie nodes.
