@@ -41,3 +41,15 @@ public:
         }
     }
 };
+
+class Trie {
+private:
+    // A trie is a vector of unordered_sets of trie nodes.
+    std::vector<std::unordered_set<TrieNode>> trie;
+
+    std::unordered_set<TrieNode>::iterator get_letter_in_set (char, int);
+    bool letter_in_set (char, int);
+public:
+    void insert (const std::string&);
+    bool search (const std::string&);
+};
