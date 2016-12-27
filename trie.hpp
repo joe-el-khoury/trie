@@ -51,6 +51,21 @@ struct hash<TrieNode> {
 };
 }
 
+/**
+ * An iterator to iterate through a string in a pairwise manner.
+ * Example: 'hello' : ('h', 'e'), ('e', 'l'), ('l', 'l'), ('l', 'o'), ('o', 0x00).
+ */
+class pairwise_iter {
+private:
+    std::string str;
+public:
+    class iterator : public std::iterator<std::random_access_iterator_tag,
+                                          std::pair<char, char>,
+                                          ptrdiff_t,
+                                          std::pair<char, char>*,
+                                          std::pair<char, char>> {};
+};
+
 class Trie {
 private:
     // A trie is a vector of unordered_sets of trie nodes.
