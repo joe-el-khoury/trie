@@ -90,6 +90,12 @@ public:
             return std::make_pair(first, second);
         }
     };
+
+    pairwise_iter (const std::string& _str)
+            : str(_str) {}
+
+    iterator begin () { return iterator(str); }
+    iterator end   () { return iterator(str, str.size()); }
 };
 
 class Trie {
