@@ -63,7 +63,17 @@ public:
                                           std::pair<char, char>,
                                           ptrdiff_t,
                                           std::pair<char, char>*,
-                                          std::pair<char, char>> {};
+                                          std::pair<char, char>> {
+
+    private:
+        std::string iterating;
+        int first_char_index;
+    public:
+        explicit iterator (const std::string& _str)
+                : iterating(_str), first_char_index(0) {}
+        explicit iterator (const std::string& _str, int _first_char_index)
+                : iterating(_str), first_char_index(_first_char_index) {}
+    };
 };
 
 class Trie {
