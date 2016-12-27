@@ -107,7 +107,7 @@ private:
     bool letter_in_set (char, int);
 public:
     void insert (const std::string&);
-    bool search (const std::string&);
+    bool search (const std::string&) const;
 };
 
 std::unordered_set<TrieNode>::iterator Trie::get_letter_in_set (char _letter, int _trie_level) {
@@ -126,4 +126,63 @@ bool Trie::letter_in_set (char _letter, int _trie_level) {
 
     auto& set = trie[_trie_level];
     return !(set.find(TrieNode(_letter)) == set.end());
+}
+
+///////////////////////////////////////////////////////////////////////
+////////////////////// Insert & Search ///////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void Trie::insert (const std::string& _word) {
+    int trie_level = 0;
+    for (auto&& letter_pair : pairwise_iter(_word)) {
+        char first_char  = letter_pair.first;
+        char second_char = letter_pair.second;
+        bool is_end_of_word = (second_char == 0x00);
+
+        if (trie_level >= trie.size()) {
+            trie.push_back(
+                std::unordered_set<TrieNode>()
+            );
+        }
+
+        if (letter_in_set(first_char, trie_level)) {
+            // The letter is in this trie level.
+
+            // Find the letter in the set.
+            auto trie_node_iter = get_letter_in_set(first_char, trie_level);
+            
+            if (!(trie_node_iter->in_next(second_char))) {
+                TrieNode tn = *trie_node_iter;
+                tn.add_to_next(second_char);
+
+                // Remove the trie node and add it again.
+                trie[trie_level].erase(trie_node_iter);
+                trie[trie_level].insert(tn);
+            }
+
+            // Iterator is invalidated, so get it again.
+            trie_node_iter = get_letter_in_set(first_char, trie_level);
+
+            if (is_end_of_word) {
+                TrieNode tn = *trie_node_iter;
+                tn.set_complete(true);
+
+                trie[trie_level].erase(trie_node_iter);
+                trie[trie_level].insert(tn);
+            }
+        
+        } else {
+            // The letter is not in this trie level.
+
+            if (is_end_of_word) {
+                TrieNode created(first_char, true);
+                trie[trie_level].insert(created);
+            } else {
+                TrieNode created(first_char, second_char);
+                trie[trie_level].insert(created);
+            }
+        }
+
+        trie_level++;
+    }
 }
