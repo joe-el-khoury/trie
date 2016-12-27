@@ -73,6 +73,22 @@ public:
                 : iterating(_str), first_char_index(0) {}
         explicit iterator (const std::string& _str, int _first_char_index)
                 : iterating(_str), first_char_index(_first_char_index) {}
+        iterator& operator++ ()    { first_char_index++; return *this; }
+        iterator  operator++ (int) { iterator ret = *this; ++(*this); return ret; }
+        bool operator== (const iterator& _other) { return (iterating == _other.iterating) &&
+                                                          (first_char_index == _other.first_char_index); }
+        bool operator!= (const iterator& _other) { return !(*this == _other); }
+        reference operator* () const {
+            char first, second;
+            if (first_char_index == iterating.size()-1) {
+                first  = iterating[first_char_index];
+                second = 0x00;
+            } else {
+                first  = iterating[first_char_index];
+                second = iterating[first_char_index-1];
+            }
+            return std::make_pair(first, second);
+        }
     };
 };
 
