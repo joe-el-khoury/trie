@@ -62,3 +62,21 @@ public:
     void insert (const std::string&);
     bool search (const std::string&);
 };
+
+std::unordered_set<TrieNode>::iterator Trie::get_letter_in_set (char _letter, int _trie_level) {
+    if (_trie_level >= trie.size()) {
+        return std::unordered_set<TrieNode>::iterator();
+    }
+
+    auto& set = trie[_trie_level];
+    return set.find(TrieNode(_letter));
+}
+
+bool Trie::letter_in_set (char _letter, int _trie_level) {
+    if (_trie_level >= trie.size()) {
+        return false;
+    }
+
+    auto& set = trie[_trie_level];
+    return !(set.find(TrieNode(_letter)) == set.end());
+}
