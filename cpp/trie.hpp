@@ -85,7 +85,7 @@ public:
                 second = 0x00;
             } else {
                 first  = iterating[first_char_index];
-                second = iterating[first_char_index-1];
+                second = iterating[first_char_index+1];
             }
             return std::make_pair(first, second);
         }
