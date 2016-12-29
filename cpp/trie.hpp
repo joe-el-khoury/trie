@@ -150,23 +150,23 @@ void Trie::insert (const std::string& _word) {
 
             // Find the letter in the set.
             auto trie_node_iter = get_letter_in_set(first, trie_level);
+
+            if (is_end_of_word) {
+                TrieNode tn = *trie_node_iter;
+                tn.set_complete(true);
+
+                trie[trie_level].erase(trie_node_iter);
+                trie[trie_level].insert(tn);
+
+                // Nothing else to do.
+                continue;
+            }
             
             if (!(trie_node_iter->in_next(second))) {
                 TrieNode tn = *trie_node_iter;
                 tn.add_to_next(second);
 
                 // Remove the trie node and add it again.
-                trie[trie_level].erase(trie_node_iter);
-                trie[trie_level].insert(tn);
-            }
-
-            // Iterator is invalidated, so get it again.
-            trie_node_iter = get_letter_in_set(first, trie_level);
-
-            if (is_end_of_word) {
-                TrieNode tn = *trie_node_iter;
-                tn.set_complete(true);
-
                 trie[trie_level].erase(trie_node_iter);
                 trie[trie_level].insert(tn);
             }
