@@ -107,7 +107,7 @@ private:
     bool letter_in_set (char, int);
 public:
     void insert (const std::string&);
-    bool search (const std::string&) const;
+    bool search (const std::string&);
 };
 
 std::unordered_set<TrieNode>::iterator Trie::get_letter_in_set (char _letter, int _trie_level) {
@@ -185,4 +185,39 @@ void Trie::insert (const std::string& _word) {
 
         trie_level++;
     }
+}
+
+bool Trie::search (const std::string& _word) {
+    // Simple initial check.
+    if (_word.size() > trie.size()) {
+        return false;
+    }
+
+    int trie_level = 0;
+    for (auto&& letter_pair : pairwise_iter(_word)) {
+        char first  = letter_pair.first;
+        char second = letter_pair.second;
+        bool is_end_of_word = (second == 0x00);
+
+        if (letter_in_set(first, trie_level)) {
+            auto trie_node_iter = get_letter_in_set(first, trie_level);
+            
+            if (is_end_of_word) {
+                return trie_node_iter->is_complete();
+            }
+
+            if (!(trie_node_iter->in_next(second))) {
+                // The second character does not come after after this character.
+                return false;
+            }
+        
+        } else {
+            // The letter is not in this set.
+            return false;
+        }
+
+        trie_level++;
+    }
+
+    return true;
 }
